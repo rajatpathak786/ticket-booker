@@ -1,0 +1,60 @@
+# Skaffold basically helps in the development process, it makes changes in cluster whenever we make changes in code. So unlike real k8s objects we don't have to push images rollout deployments each time we make changes
+
+apiVersion: skaffold/v4beta9           
+kind: Config
+build:  
+  artifacts:
+    - image: rajatpathak/auth-backend                  # Artifacts sync files in context to it's respective pod
+      context: auth-backend                            
+      sync:
+        manual:
+          - src: 'src/**/*.ts'                         # It checks here if we make any changes inside auth-backend/src/**/*.ts (also sub directories inside src folder) then it takes that file and direcly replaces that in the pod.
+            dest: .                                    # If change is made in any other file then it looks for the image rebuilds the image and redeploys the pod.
+      docker:
+        dockerfile: Dockerfile
+    # - image: rajatpathak/dashboard-ui
+    #   context: dashboard-ui
+    #   sync:
+    #     manual:
+    #       - src: 'src/**/*.js'                       
+    #         dest: .
+    #   docker:
+    #     dockerfile: Dockerfile
+    # - image: rajatpathak/event-bus-backend
+    #   context: event-bus-backend
+    #   sync:
+    #     manual:
+    #       - src: '*.js'
+    #         dest: .
+    #   docker:
+    #     dockerfile: Dockerfile
+    # - image: rajatpathak/moderation-backend
+    #   context: moderation-backend
+    #   sync:
+    #     manual:
+    #       - src: '*.js'
+    #         dest: .
+    #   docker:
+    #     dockerfile: Dockerfile
+    # - image: rajatpathak/post-backend
+    #   context: posts-backend
+    #   sync:
+    #     manual:
+    #       - src: '*.js'
+    #         dest: .
+    #   docker:
+    #     dockerfile: Dockerfile
+    # - image: rajatpathak/query-backend
+    #   context: query-backend
+    #   sync:
+    #     manual:
+    #       - src: '*.js'
+    #         dest: .  
+    #   docker:
+    #     dockerfile: Dockerfile
+  local:
+    push: false                                           # Here each time skaffold makes a build it will try to push that to docker hub, hence we set that to false 
+manifests:
+  rawYaml:
+    - ./infra/k8s/*                                       # It looks for all the config files inside infra/k8s and runs them.            
+ 
