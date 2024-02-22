@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"                                                     
+spec:
+  ingressClassName: nginx                                    # specifies our ingress object that it has some routing rules for it               
+  rules:                                                     # Rules will have routing rules which we want to apply for ingress controller to route it to different paths, rules will be an array
+    - host: ticketbooker.com                                         
+      http:
+        paths:
+          - path: /api/user/?(.*)                            # Here it will check requests to /posts and would route them to post-backend-clusterip-srv, 
+            pathType: ImplementationSpecific                 # Ingress controller doesn't differenciate between get and post request for mapping routes, Hence we'll need to provide seperate routes for each request.
+            backend:
+              service:                                       # As that service would then listen requests and process it to respective pod.              
+                name: auth-backend-srv                       # Port associated with the service
+                port:
+                  number: 3000
+          # - path: /posts                                     
+          #   pathType: Prefix                                 
+          #   backend:
+          #     service:                                       
+          #       name: query-backend-srv                      
+          #       port:
+          #         number: 4002
+          # - path: /posts/?(.*)/comment                        # Mentions regex for mapping comment request             
+          #   pathType: ImplementationSpecific                                 
+          #   backend:
+          #     service:                                       
+          #       name: comment-backend-srv                      
+          #       port:
+          #         number: 4001
+          # - path: /?(.*)                                      # Port for react application to run, we can't have simple / . We'll need to provide regex /?(.*) for it
+          #   pathType: ImplementationSpecific                  # We can't put this path at the top, as all these paths in ingress controller run in order of prefrence and if we put it at top then all request would go to this only,
+          #   backend:                                          # Basically requests will come here only after checking above requests
+          #     service:                                       
+          #       name: dashboard-ui-srv                      
+          #       port:
+          #         number: 3000
