@@ -2,9 +2,10 @@ import express, { Request, Response } from "express";
 const router = express.Router();
 import UsersController from "../controllers/users-controller";
 import { userValidation } from "../middleware";
-import { body, validationResult } from "express-validator";
+import { body, validationResult, ValidationError } from "express-validator";
 
 router.get(`/currentuser`, UsersController.currentUser);
+router.post("/signup", userValidation, UsersController.currentUser);
 // router.post(
 //   "/signup",
 //   [
@@ -29,5 +30,23 @@ router.get(`/currentuser`, UsersController.currentUser);
 //     res.send({});
 //   }
 // );
+
+// if (err instanceof RequestValidationError) {
+//   const formattedErrors = err.errors.map((error) => {
+//     if (error.type === 'field') {
+//       return { message: error.msg, field: error.path };
+//     }
+//   });
+//   return res.status(400).send({ errors: formattedErrors });
+// }
+
+// serializeErrors() {
+//   return this.errors.map((err) => {
+//     if (err.type === 'field') {
+//       return { message: err.msg, field: err.path };
+//     }
+//     return { message: err.msg };
+//   });
+// }
 
 export default router;
