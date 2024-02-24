@@ -26,14 +26,14 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model<UserDoc, UserModel>("User", userSchema);
-
 // We'll use User.build({}) to create a new user instead of directly using new User()
 // We do this as typescript in new User() will not recognise & verify details we are providing inside that, hence to use typescript validations we do this
 
 userSchema.statics.build = (details: IUserDetails) => {
   return new User(details);
 };
+
+const User = mongoose.model<UserDoc, UserModel>("User", userSchema);
 
 // We can also directly create an buildUser function like below and use it to create a new User Document by exporting buildUser function
 

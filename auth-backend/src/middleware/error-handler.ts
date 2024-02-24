@@ -7,7 +7,5 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   console.log(`Something went wrong`, err);
-  res.status(400).send({
-    message: err.message,
-  });
+  res.status(400).send(err);
 };

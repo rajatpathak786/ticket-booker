@@ -5,7 +5,7 @@ import { userValidation } from "../middleware";
 import { body, validationResult, ValidationError } from "express-validator";
 
 router.get(`/currentuser`, UsersController.currentUser);
-router.post("/signup", userValidation, UsersController.currentUser);
+router.post("/signup", UsersController.userSignUpController);
 // router.post(
 //   "/signup",
 //   [

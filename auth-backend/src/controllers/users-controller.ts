@@ -6,4 +6,13 @@ export default class UsersController {
     const response = UsersService.getCurrentUsersDetails(req, res, next);
     res.send(response);
   }
+
+  static async userSignUpController(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const response = await UsersService.userSignUpService(req, res, next);
+    res.send(response);
+  }
 }
