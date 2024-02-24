@@ -3,8 +3,12 @@ import UsersService from "../services/users-service";
 
 export default class UsersController {
   static currentUser(req: Request, res: Response, next: NextFunction) {
-    const response = UsersService.getCurrentUsersDetails(req, res, next);
-    res.send(response);
+    try {
+      const response = UsersService.getCurrentUsersDetails(req, res);
+      res.send(response);
+    } catch (error) {
+      next(error);
+    }
   }
 
   static async userSignUpController(
@@ -12,7 +16,11 @@ export default class UsersController {
     res: Response,
     next: NextFunction
   ) {
-    const response = await UsersService.userSignUpService(req, res, next);
-    res.send(response);
+    try {
+      const response = await UsersService.userSignUpService(req, res);
+      res.send(response);
+    } catch (error) {
+      next(error);
+    }
   }
 }
