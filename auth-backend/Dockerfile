@@ -10,6 +10,10 @@ COPY ./package.json ./
 # Install app dependencies
 RUN npm install
 
+# Set ENV Variable for jwt token 
+ENV JWT_PVT_KEY "private_key_placeholder"
+
+
 # COPY everything else
 COPY ./ ./
 

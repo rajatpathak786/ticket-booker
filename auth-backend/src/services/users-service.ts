@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { User } from "../models/users";
 import { generatePasswordHash } from "../utils/hashing";
+import jwt from "jsonwebtoken";
 
 export default class UsersService {
   static getCurrentUsersDetails(req: Request, res: Response) {
@@ -28,6 +29,16 @@ export default class UsersService {
       }
       const hash = await generatePasswordHash(password);
       const newUser = User.build({ email, password: hash });
+      const token = jwt.sign(
+        {
+          id: newUser.id,
+          email: newUser.email,
+        },
+        process.env.JWT_PVT_KEY as string
+      );
+      req.session = {
+        jwt: token,
+      };
       return await newUser.save();
     } catch (error: any) {
       console.log(error);
