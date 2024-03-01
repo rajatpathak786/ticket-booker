@@ -1,11 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import UsersService from "../services/users-service";
+import ResponseHandler from "../utils/response-handlet";
 
 export default class UsersController {
   static currentUser(req: Request, res: Response, next: NextFunction) {
     try {
       const response = UsersService.getCurrentUsersDetails(req, res);
-      res.send(response);
+      res.send(
+        ResponseHandler.handleSuccess(
+          `Fetched Users Data Successfully`,
+          response
+        )
+      );
     } catch (error) {
       next(error);
     }
@@ -18,7 +24,9 @@ export default class UsersController {
   ) {
     try {
       const response = await UsersService.userSignUpService(req, res);
-      res.send(response);
+      res.send(
+        ResponseHandler.handleSuccess(`User SignedUp Successfully`, response)
+      );
     } catch (error) {
       next(error);
     }
