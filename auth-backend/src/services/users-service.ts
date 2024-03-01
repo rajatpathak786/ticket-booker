@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { User } from "../models/users";
-import { generatePasswordHash } from "../utils/hashing";
-import jwt from "jsonwebtoken";
+import { generatePasswordHash, comparePasswordHash } from "../utils/hashing";
+import { jwtGenerator } from "../utils/jwt-generator";
 
 export default class UsersService {
   static getCurrentUsersDetails(req: Request, res: Response) {
@@ -29,17 +29,35 @@ export default class UsersService {
       }
       const hash = await generatePasswordHash(password);
       const newUser = User.build({ email, password: hash });
-      const token = jwt.sign(
-        {
-          id: newUser.id,
-          email: newUser.email,
-        },
-        process.env.JWT_PVT_KEY as string
-      );
+      const token = jwtGenerator(newUser.id, newUser.email);
       req.session = {
         jwt: token,
       };
       return await newUser.save();
+    } catch (error: any) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  static async userSignInService(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+      if (!user) {
+        console.log(`Invalid email address provided`);
+        throw Error(`Email Invalid Credentials`);
+      }
+      const hash = await comparePasswordHash(user.password, password);
+      if (!hash) {
+        console.log(`Password not matched`);
+        throw Error(`Email Invalid Credentials`);
+      }
+      const token = jwtGenerator(user.id, user.email);
+      req.session = {
+        jwt: token,
+      };
+      return;
     } catch (error: any) {
       console.log(error);
       throw error;
