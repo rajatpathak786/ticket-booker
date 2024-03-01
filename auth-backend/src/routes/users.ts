@@ -1,12 +1,26 @@
 import express, { Request, Response } from "express";
 const router = express.Router();
 import UsersController from "../controllers/users-controller";
-import { userValidation } from "../middleware";
-import { body, validationResult, ValidationError } from "express-validator";
+import { userValidation, validationRules } from "../middleware";
 
-router.get(`/currentuser`, UsersController.currentUser);
-router.post("/signup", UsersController.userSignUpController);
-router.post("/signin", UsersController.userSignInController);
+router.get(
+  `/currentuser`,
+  validationRules(),
+  userValidation,
+  UsersController.currentUser
+);
+router.post(
+  "/signup",
+  validationRules(),
+  userValidation,
+  UsersController.userSignUpController
+);
+router.post(
+  "/signin",
+  validationRules(),
+  userValidation,
+  UsersController.userSignInController
+);
 // router.post(
 //   "/signup",
 //   [
