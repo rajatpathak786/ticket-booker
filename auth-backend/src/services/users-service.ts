@@ -1,12 +1,16 @@
 import { Request, Response } from "express";
 import { User } from "../models/users";
 import { generatePasswordHash, comparePasswordHash } from "../utils/hashing";
-import { jwtGenerator } from "../utils/jwt-generator";
+import { jwtGenerator } from "../utils/jwt-helper";
+import { CustomRequestTokenValidator } from "../lib";
 
 export default class UsersService {
-  static getCurrentUsersDetails(req: Request, res: Response) {
-    try {      
-      return `User Details`;
+  static getCurrentUsersDetails(
+    req: CustomRequestTokenValidator,
+    res: Response
+  ) {
+    try {
+      return req.currentUser;
     } catch (error: any) {
       console.log(error.message);
       throw error;

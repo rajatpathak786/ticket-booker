@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import UsersService from "../services/users-service";
 import ResponseHandler from "../utils/response-handler";
+import { CustomRequestTokenValidator } from "../lib";
 
 export default class UsersController {
   static currentUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = UsersService.getCurrentUsersDetails(req, res);
+      const response = UsersService.getCurrentUsersDetails(
+        req as CustomRequestTokenValidator,
+        res
+      );
       res.send(
         ResponseHandler.handleSuccess(
           `Fetched Users Data Successfully`,

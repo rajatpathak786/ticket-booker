@@ -1,10 +1,4 @@
-interface IResponseHandler {
-  message: string;
-  data: any;
-  success?: boolean;
-  error?: any;
-  status?: number;
-}
+import { IResponseHandler } from "../lib";
 
 export default class ResponseHandler {
   static handleSuccess(
