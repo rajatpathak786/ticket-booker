@@ -1,7 +1,12 @@
 import express from "express";
 const router = express.Router();
 import UsersController from "../controllers/users-controller";
-import { userValidation, validationRules, tokenValidator } from "../middleware";
+import {
+  userValidation,
+  validationRules,
+  tokenValidator,
+  userSignout,
+} from "../middleware";
 
 router.get(`/currentuser`, tokenValidator, UsersController.currentUser);
 router.post(
@@ -16,6 +21,7 @@ router.post(
   userValidation,
   UsersController.userSignInController
 );
+router.post("/signout", userSignout, UsersController.userSignOutController);
 // router.post(
 //   "/signup",
 //   [

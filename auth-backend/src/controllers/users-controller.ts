@@ -50,4 +50,19 @@ export default class UsersController {
       next(error);
     }
   }
+
+  static async userSignOutController(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const response = UsersService.userSignOutService(req, res);
+      res.send(
+        ResponseHandler.handleSuccess(`User SignedOut Successfully`, response)
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }

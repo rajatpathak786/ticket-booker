@@ -61,4 +61,13 @@ export default class UsersService {
       throw error;
     }
   }
+
+  static userSignOutService(req: Request, res: Response) {
+    try {
+      return `User Successfully Signed Out`;
+    } catch (error: any) {
+      console.log(error.message);
+      throw error;
+    }
+  }
 }
